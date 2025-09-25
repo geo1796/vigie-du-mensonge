@@ -5,16 +5,27 @@ FROM node:24.8.0-alpine AS builder
 WORKDIR /app
 
 # Install only what is needed for build in a clean environment
-COPY package.json package-lock.json ./
+COPY frontend/vigie-du-mensonge/package.json frontend/vigie-du-mensonge/package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
 # Copy the rest of the source
-COPY . .
+COPY frontend/vigie-du-mensonge/. .
 
 # Build the production assets
 RUN npm run build
 
-# --- Stage 2: Run with unprivileged nginx ---
+# --- Stage 2: Build OpenAPI docs ---
+FROM node:24.8.0-alpine as openapi-builder
+
+WORKDIR /app
+
+COPY openapi .
+
+RUN npm install -g @redocly/cli
+RUN redocly build-docs openapi.yml --o docs.html
+
+
+# --- Stage 3: Run with unprivileged nginx ---
 # nginxinc/nginx-unprivileged listens on 8080 by default and runs as non-root (uid 101)
 FROM nginxinc/nginx-unprivileged:1.27-alpine
 
@@ -24,8 +35,12 @@ FROM nginxinc/nginx-unprivileged:1.27-alpine
 # Copy build output
 COPY --from=builder /app/dist /usr/share/nginx/html
 
+# Copy openapi docs
+RUN mkdir -p /usr/share/nginx/html/openapi
+COPY --from=openapi-builder /app/docs.html /usr/share/nginx/html/openapi/index.html
+
 # Provide hardened nginx configuration (includes SPA fallback and headers)
-COPY ops/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY frontend/vigie-du-mensonge/ops/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 8080
 

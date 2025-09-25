@@ -14,12 +14,13 @@ services:
       timeout: 5s
       retries: 5
 
-#  frontend:
-#    build:
-#      context: frontend/vigie-du-mensonge
-#    container_name: vdm_frontend
-#    ports:
-#      - "5173:8080"
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/vigie-du-mensonge/Dockerfile
+    container_name: vdm_frontend
+    ports:
+      - "5173:8080"
 
   backend:
     build:
