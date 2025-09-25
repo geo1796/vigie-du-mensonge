@@ -63,6 +63,9 @@ func main() {
 		return c.SendStatus(fiber.StatusOK)
 	})
 
+	// Serve OpenAPI documentation
+	app.Static("/openapi", "./public/openapi.html")
+
 	api.Register(app, deps)
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)

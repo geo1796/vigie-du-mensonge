@@ -24,7 +24,8 @@ services:
 
   backend:
     build:
-      context: backend
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: vdm_backend
     ports:
       - "8080:8080"
