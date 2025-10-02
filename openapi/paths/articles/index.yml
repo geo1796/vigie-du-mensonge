@@ -1,40 +1,20 @@
-articlesRoot:
-  get:
-    summary: Listing des articles
-    description:
-      Liste les articles. Si l’utilisateur n’est pas MODERATOR, ignore le paramètre `status` et retourne uniquement les articles APPROVED.
-    tags: [ Articles ]
-    operationId: listArticles
-    parameters:
-      - $ref: "../../openapi.yml#/components/parameters/PoliticianIdQuery"
-      - $ref: "../../openapi.yml#/components/parameters/StatusQuery"
-      - $ref: "../../openapi.yml#/components/parameters/BeforeQuery"
-      - $ref: "../../openapi.yml#/components/parameters/CategoriesQuery"
-    responses:
-      '200':
-        description: Liste d’articles retournée
-        content:
-          application/json:
-            schema: { $ref: "../../openapi.yml#/components/schemas/ArticleListResponse" }
-  post:
-    summary: Créer un article
-    description: Action reservée aux REDACTOR. Crée un article.
-    tags: [ Articles ]
-    operationId: createArticle
-    security:
-      - accessCookie: [ ]
-    requestBody:
-      required: true
+get:
+  summary: Listing des articles dont le statut est PUBLISHED
+  description: Aucune authentification requise.
+  tags: [ Articles ]
+  operationId: listArticles
+  responses:
+    '200':
+      description: OK
       content:
         application/json:
-          schema: { $ref: "../../openapi.yml#/components/schemas/ArticleCreateRequest" }
-    responses:
-      '201':
-        description: Article créé
-        content:
-          application/json:
-            schema: { $ref: "../../openapi.yml#/components/schemas/ArticleCreateResponse" }
-      '400':
-        $ref: "../../openapi.yml#/components/responses/Error400"
-      '401':
-        $ref: "../../openapi.yml#/components/responses/Error401"
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id: { type: string, format: uuid }
+                title: { type: string }
+                eventDate: { type: string, format: date-time }
+                updatedAt: { type: string, format: date-time }
+                category: { $ref: "../../openapi.yml#/components/schemas/ArticleCategory" }

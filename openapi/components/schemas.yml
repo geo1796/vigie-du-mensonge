@@ -1,147 +1,17 @@
 schemas:
-  AuthCredentials:
-    type: object
-    required: [ email, password ]
-    properties:
-      email: { type: string, format: email, example: bob@example.com }
-      password: { type: string, format: password, example: Test1796! }
+  UserRole:
+    type: string
+    enum: [ ADMIN, MODERATOR, REDACTOR ]
   AuthResponse:
     type: object
     properties:
       accessTokenExpiry: { type: string, format: date-time }
       refreshTokenExpiry: { type: string, format: date-time }
-      emailVerified: { type: boolean }
+      tag: { type: string }
       roles: { type: array, items: { $ref: "#/schemas/UserRole" } }
-  SignUpResponse:
-    type: object
-    properties:
-      accessTokenExpiry: { type: string, format: date-time }
-      refreshTokenExpiry: { type: string, format: date-time }
-  EmailVerificationProcessRequest:
-    type: object
-    required: [ token ]
-    properties:
-      token: { type: string, description: JWT reçu par email }
-  PasswordUpdateInquireRequest:
-    type: object
-    required: [ email ]
-    properties:
-      email: { type: string, format: email }
-  PasswordUpdateProcessRequest:
-    type: object
-    required: [ token, newPassword ]
-    properties:
-      token: { type: string, description: JWT reçu par email }
-      newPassword: { type: string, format: password }
-  PoliticianListResponseItem:
-    type: object
-    properties:
-      id: { type: string, format: uuid }
-      fullName: { type: string }
-      imageUrl: { type: string, format: uri }
-      articles: { type: integer }
-  PoliticianListResponse:
-    type: array
-    items: { $ref: "#/schemas/PoliticianListResponseItem" }
-  ArticleListResponseItem:
-    type: object
-    properties:
-      id: { type: string, format: uuid }
-      title: { type: string, maxLength: 50 }
-      eventDate: { type: string, format: date-time }
-      createdAt: { type: string, format: date-time }
-      status: { $ref: "#/schemas/ArticleStatus" }
-      category: { $ref: "#/schemas/ArticleCategory" }
-      tags:
-        type: array
-        maxItems: 10
-        items: { type: string, maxLength: 25 }
-  ArticleListResponse:
-    type: array
-    items: { $ref: "#/schemas/ArticleListResponseItem" }
-  ArticleDetailsResponse:
-    type: object
-    properties:
-      body: { type: string, maxLength: 2000 }
-      politicians:
-        type: array
-        items: {
-          type: object,
-          properties: {
-            id: { type: string, format: uuid },
-            fullName: { type: string },
-            imageUrl: { type: string, format: uri }
-          }
-        }
-      sources:
-        type: array
-        minItems: 1
-        maxItems: 5
-        items: { type: string, format: uri }
-  ArticleCreateRequest:
-    type: object
-    required: [ title, eventDate, body, tags, sources, politicians, category ]
-    properties:
-      title: { type: string, maxLength: 50 }
-      eventDate: { type: string, format: date-time }
-      body: { type: string, maxLength: 2000 }
-      category: { $ref: "#/schemas/ArticleCategory" }
-      politicians:
-        type: array
-        minItems: 1
-        maxItems: 5
-        items: { type: string, format: uuid }
-      tags:
-        type: array
-        minItems: 1
-        maxItems: 10
-        items: { type: string, maxLength: 25 }
-      sources:
-        type: array
-        minItems: 1
-        maxItems: 5
-        items: { type: string, format: uri }
-  ArticleEditRequest:
-    type: object
-    properties:
-      title: { type: string, maxLength: 50 }
-      eventDate: { type: string, format: date-time }
-      body: { type: string, maxLength: 2000 }
-      category: { $ref: "#/schemas/ArticleCategory" }
-      politicians:
-        type: array
-        minItems: 1
-        maxItems: 5
-        items: { type: string, format: uuid }
-      tags:
-        type: array
-        minItems: 1
-        maxItems: 10
-        items: { type: string, maxLength: 25 }
-      sources:
-        type: array
-        minItems: 1
-        maxItems: 5
-        items: { type: string, format: uri }
-  ArticleCreateResponse:
-    type: object
-    properties:
-      articleId: { type: string, format: uuid }
-  ArticleStatus:
-    type: string
-    enum: [ PUBLISHED, ARCHIVED, UNDER_REVIEW, DRAFT, CHANGE_REQUESTED ]
-  ReviewDecision:
-    type: string
-    enum: [ PUBLISHED, CHANGE_REQUESTED ]
-  ReviewRequest:
-    type: object
-    required: [ status, notes ]
-    properties:
-      status: { $ref: "#/schemas/ReviewDecision" }
-      notes: { type: string }
   ArticleCategory:
     type: string
     enum: [ FALSEHOOD, LIE ]
-  UserRole:
+  ArticleStatus:
     type: string
-    enum: [ ADMIN, MODERATOR, REDACTOR ]
+    enum: [ PUBLISHED, ARCHIVED, UNDER_REVIEW, DRAFT, CHANGE_REQUESTED ]

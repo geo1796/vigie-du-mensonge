@@ -1,0 +1,29 @@
+post:
+  summary: Inscription
+  description: Crée le compte à partir du token reçu par email avec le nom d'utilisateur et le mot de passe saisis.
+  tags: [ Auth ]
+  operationId: authProcessSignUp
+  security:
+    - csrfCookie: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [ token, username, password ]
+          properties:
+            token: { type: string }
+            username: { type: string }
+            password: { type: string }
+  responses:
+    '201':
+      description: Created
+      headers:
+        Set-Cookie:
+          $ref: "../../../openapi.yml#/components/headers/SetAuthCookies"
+      content:
+        application/json:
+          schema: { $ref: "../../../openapi.yml#/components/schemas/AuthResponse" }
+    '400':
+      description: Bad Request

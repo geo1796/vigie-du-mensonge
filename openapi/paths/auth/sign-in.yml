@@ -1,24 +1,28 @@
-signIn:
-  post:
-    summary: Connexion
-    description: Authentifie l’utilisateur et renvoie les dates d’expiration. Définit des cookies HttpOnly.
-    tags: [Auth]
-    operationId: authSignIn
-    requestBody:
-      required: true
+post:
+  summary: Connexion
+  description: Authentifie l’utilisateur et renvoie les dates d’expiration des tokens. Définit des cookies HttpOnly (tokens d'accès et de rafraîchissement).
+  tags: [ Auth ]
+  operationId: authSignIn
+  security:
+    - csrfCookie: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [ email, password ]
+          properties:
+            email: { type: string, format: email, example: bob@example.com }
+            password: { type: string, format: password, example: Test1796! }
+  responses:
+    '200':
+      description: OK
+      headers: { Set-Cookie: { $ref: "../../openapi.yml#/components/headers/SetAuthCookies" } }
       content:
         application/json:
-          schema: { $ref: "../../openapi.yml#/components/schemas/AuthCredentials" }
-    responses:
-      '200':
-        description: Connexion réussie
-        headers:
-          Set-Cookie:
-            $ref: "../../openapi.yml#/components/headers/SetAuthCookies"
-        content:
-          application/json:
-            schema: { $ref: "../../openapi.yml#/components/schemas/AuthResponse" }
-      '400':
-        $ref: "../../openapi.yml#/components/responses/Error400"
-      '401':
-        $ref: "../../openapi.yml#/components/responses/Error401"
+          schema: { $ref: "../../openapi.yml#/components/schemas/AuthResponse" }
+    '400':
+      description: Bad Request
+    '401':
+      description: Unauthorized

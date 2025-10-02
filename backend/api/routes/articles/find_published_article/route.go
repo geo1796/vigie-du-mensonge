@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	Path   = "/:" + local_keys.ArticleID
+	Path   = "/:" + local_keys.ArticleID // TODO: peut etre fetch plûtot à partir de la reference ?
 	Method = fiber.MethodGet
 )
 

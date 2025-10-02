@@ -1,0 +1,35 @@
+get:
+  summary: Listing des articles revendiqués par le modérateur
+  description: Authentification requise. Articles avec status UNDER_REVIEW déjà revendiqués par l’utilisateur connecté.
+  tags: [ Moderator ]
+  operationId: getClaimedArticlesForModerator
+  security:
+    - accessCookie: []
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id: { type: string, format: uuid }
+                reference: { type: string, format: uuid }
+                title: { type: string }
+                category: { $ref: "../../../openapi.yml#/components/schemas/ArticleCategory" }
+                status: { $ref: "../../../openapi.yml#/components/schemas/ArticleStatus" }
+                eventDate: { type: string, format: date-time }
+                updatedAt: { type: string, format: date-time }
+                redactorTag: { type: string }
+                politicians:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id: { type: string, format: uuid }
+                      fullName: { type: string }
+                tags:
+                  type: array
+                  items: { type: string }

@@ -1,0 +1,34 @@
+get:
+  summary: Listing des articles en attente (modération)
+  description: Authentification requise. Articles avec status UNDER_REVIEW et non encore revendiqués par un modérateur.
+  tags: [ Moderator ]
+  operationId: getPendingArticlesForModerator
+  security:
+    - accessCookie: []
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id: { type: string, format: uuid }
+                reference: { type: string, format: uuid }
+                title: { type: string }
+                category: { $ref: "../../../openapi.yml#/components/schemas/ArticleCategory" }
+                eventDate: { type: string, format: date-time }
+                updatedAt: { type: string, format: date-time }
+                redactorTag: { type: string }
+                politicians:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id: { type: string, format: uuid }
+                      fullName: { type: string }
+                tags:
+                  type: array
+                  items: { type: string }

@@ -1,0 +1,40 @@
+get:
+  summary: Récupérer le contenu d'un article
+  description: Aucune authentification requise.
+  tags: [ Articles ]
+  operationId: findArticle
+  parameters:
+    - articleID:
+        name: articleID
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id: { type: string, format: uuid }
+              reference: { type: string, format: uuid }
+              title: { type: string }
+              body: { type: string }
+              eventDate: { type: string, format: date-time }
+              updatedAt: { type: string, format: date-time }
+              category: { $ref: "../../openapi.yml#/components/schemas/ArticleCategory" }
+              politicians:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string, format: uuid }
+                    firstName: { type: string }
+                    lastName: { type: string }
+              tags:
+                type: array
+                items: { type: string }
+              sources:
+                type: array
+                items: { type: string }

@@ -1,0 +1,86 @@
+get:
+  summary: Listing des articles du rédacteur
+  description: Authentification requise.
+  tags: [ Redactor ]
+  operationId: getRedactorArticles
+  security:
+    - accessCookie: []
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id: { type: string, format: uuid }
+                reference: { type: string, format: uuid }
+                title: { type: string }
+                body: { type: string }
+                category: {$ref: "../../../openapi.yml#/components/schemas/ArticleCategory"}
+                status: {$ref: "../../../openapi.yml#/components/schemas/ArticleStatus"}
+                eventDate: { type: string, format: date-time }
+                updatedAt: { type: string, format: date-time }
+                politicians:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id: { type: string, format: uuid }
+                      fullName: { type: string }
+                tags:
+                  type: array
+                  items: { type: string }
+
+post:
+  summary: Créer ou sauvegarder un article (rédacteur)
+  description: "Sauvegarde les modifications et si query param 'publish' vaut true, l’article est soumis à modération. Authentification requise."
+  tags: [ Redactor ]
+  operationId: saveRedactorArticle
+  security:
+    - accessCookie: []
+      csrfCookie: []
+  parameters:
+    - publish:
+        name: publish
+        in: query
+        description: Soumettre ou non pour publication
+        required: false
+        schema: { type: boolean, default: false }
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            id: { type: string, format: uuid, description: "Laisser vide pour créer un nouvel article; fournir l'ID pour mettre à jour un article existant." }
+            title: { type: string }
+            eventDate: { type: string, format: date-time }
+            category: { $ref: "../../../openapi.yml#/components/schemas/ArticleCategory" }
+            body: { type: string }
+            tags:
+              type: array
+              items: { type: string }
+            politicianIds:
+              type: array
+              items: { type: string, format: uuid }
+            sources:
+              type: array
+              items: { type: string }
+          required: [ title, eventDate, category ]
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              articleReference: { type: string, format: uuid }
+    '400':
+      description: Bad Request (erreur de validation ou corps de requête invalide)
+    '409':
+      description: Conflict (mise à jour interdite selon le statut de l’article)

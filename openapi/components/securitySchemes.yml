@@ -1,9 +1,16 @@
 securitySchemes:
+
   accessCookie:
     type: apiKey
     in: cookie
-    name: accessToken
+    name: jwt
+
   refreshCookie:
     type: apiKey
     in: cookie
-    name: refreshToken
+    name: rft
+
+  csrfCookie:
+    type: apiKey
+    in: cookie
+    name: csrf

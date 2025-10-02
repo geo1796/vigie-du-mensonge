@@ -1,0 +1,29 @@
+post:
+  summary: Enregistrer l’avis du modérateur
+  description: Authentification requise. L’article doit être revendiqué par le modérateur et en statut UNDER_REVIEW.
+  tags: [ Moderator ]
+  operationId: saveArticleReviewForModerator
+  security:
+    - accessCookie: []
+      csrfCookie: []
+  parameters:
+    - articleID:
+        name: articleID
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            decision: { $ref: "../../../openapi.yml#/components/schemas/ArticleStatus" }
+            notes: { type: string, description: "Notes obligatoires sauf si decision=PUBLISHED" }
+          required: [ decision ]
+  responses:
+    '204':
+      description: No Content
+    '400':
+      description: Bad Request (invalid article id ou corps de requête invalide)
