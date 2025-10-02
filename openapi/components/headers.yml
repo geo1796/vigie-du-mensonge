@@ -1,18 +1,25 @@
 headers:
+
   SetAuthCookies:
     description: |
       Sets HttpOnly, Secure, SameSite=Strict cookies:
-      - accessToken (JWT)
-      - refreshToken (uuid)
+      - jwt (access token)
+      - rft (refresh token)
     schema:
       type: string
     examples:
-      access:
-        value: accessToken=eyJhbGciOi...; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=900
-      refresh:
-        value: refreshToken=be6f7e3e-...; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=2592000
+      jwt:
+        value: jwt=eyJhbGciOi...; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=900
+      rft:
+        value: rft=VWP2vCj6U...; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=86400
 
   ClearAuthCookies:
     description: Clears auth cookies (Max-Age=0).
     schema:
       type: string
+
+  SetCsrfCookie:
+    description: Sets csrf cookie HttpOnly, Secure, SameSite=Strict
+    schema:
+      type: string
+      example: csrf=VWP2vCj6U...; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=60

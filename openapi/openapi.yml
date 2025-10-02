@@ -1,52 +1,65 @@
-openapi: 3.0.3
+openapi: 3.1.2
 info:
-  title: Vigi du mensonge API
+  title: Vigie du mensonge API
   version: "1.0"
 
 servers:
-  - url: https://vigi-du-mensonge.com/api/v1
+  - url: https://vigiedumensonge.gocorp.fr/api/v1
     description: production
-  - url: http://localhost:3000/api/v1
+  - url: http://localhost:5173/api/v1
     description: local
 
 paths:
+
+  /csrf-token:
+    $ref: "./paths/csrf-token.yml"
+
   /auth/sign-in:
-    $ref: "./paths/auth/sign-in.yml#/signIn"
+    $ref: "./paths/auth/sign-in.yml"
   /auth/sign-up/inquire:
-    $ref: "./paths/auth/sign-up.yml#/inquireSignUp"
+    $ref: "./paths/auth/sign-up/inquire.yml"
   /auth/sign-up/process:
-    $ref: "./paths/auth/sign-up.yml#/processSignUp"
-  /auth/refresh:
-    $ref: "./paths/auth/refresh.yml#/refresh"
+    $ref: "./paths/auth/sign-up/process.yml"
   /auth/sign-out:
-    $ref: "./paths/auth/sign-out.yml#/signOut"
+    $ref: "./paths/auth/sign-out.yml"
+  /auth/refresh:
+    $ref: "./paths/auth/refresh.yml"
+
   /password-update/inquire:
-    $ref: "./paths/password-update/inquire.yml#/passwordUpdateInquire"
+    $ref: "./paths/password-update/inquire.yml"
   /password-update/process:
-    $ref: "./paths/password-update/process.yml#/passwordUpdateProcess"
-  /politicians:
-    $ref: "./paths/politicians/index.yml#/politiciansRoot"
+    $ref: "./paths/password-update/process.yml"
+
   /articles:
-    $ref: "./paths/articles/index.yml#/articlesRoot"
-  /articles/{articleId}:
-    $ref: "./paths/articles/article.yml#/article"
-  /articles/{articleId}/submit:
-    $ref: "./paths/articles/submit.yml#/articleSubmit"
-  /articles/{articleId}/moderation:
-    $ref: "./paths/articles/moderation.yml#/articleModeration"
-  /articles/{articleId}/review:
-    $ref: "./paths/articles/review.yml#/articleReview"
-  /roles/{roleId}/users:
-    $ref: "./paths/roles/users.yml#/roleUsers"
+    $ref: "./paths/articles/index.yml"
+  /articles/$articleID:
+    $ref: "./paths/articles/$articleID.yml"
+
+  /politicians:
+    $ref: "./paths/politicians/index.yml"
+
+  /redactor/articles:
+    $ref: "./paths/redactor/articles/index.yml"
+  /redactor/articles/$articleRef:
+    $ref: "./paths/redactor/articles/$articleRef.yml"
+
+  /moderator/articles/pending:
+    $ref: "./paths/moderator/articles/pending.yml"
+  /moderator/articles/claimed:
+    $ref: "./paths/moderator/articles/claimed.yml"
+  /moderator/articles/$articleRef:
+    $ref: "./paths/moderator/articles/$articleRef.yml"
+  /moderator/articles/$articleID/claim:
+    $ref: "./paths/moderator/articles/$articleID.claim.yml"
+  /moderator/articles/$articleID/review:
+    $ref: "./paths/moderator/articles/$articleID.review.yml"
+
 
 components:
   securitySchemes:
-    $ref: "./components/security.yml#/securitySchemes"
+    $ref: "./components/securitySchemes.yml#/securitySchemes"
   headers:
     $ref: "./components/headers.yml#/headers"
   schemas:
     $ref: "./components/schemas.yml#/schemas"
-  parameters:
-    $ref: "./components/parameters.yml#/parameters"
-  responses:
-    $ref: "./components/responses.yml#/responses"
+

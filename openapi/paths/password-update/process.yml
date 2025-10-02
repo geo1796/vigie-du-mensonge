@@ -1,18 +1,24 @@
-passwordUpdateProcess:
-  post:
-    summary: Valider la modification de mot de passe
-    description: Met à jour le mot de passe à partir du token et du nouveau mot de passe.
-    tags: [Password]
-    operationId: passwordUpdateProcess
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema: { $ref: "../../openapi.yml#/components/schemas/PasswordUpdateProcessRequest" }
-    responses:
-      '204':
-        description: Mot de passe mis à jour
-      '400':
-        $ref: "../../openapi.yml#/components/responses/Error400"
-      '410':
-        $ref: "../../openapi.yml#/components/responses/Error410"
+post:
+  summary: Valider la modification de mot de passe
+  description: Met à jour le mot de passe à partir du token reçu par email et du nouveau mot de passe.
+  tags: [ Password ]
+  operationId: passwordUpdateProcess
+  security:
+    - csrfCookie: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [ token, password ]
+          properties:
+            token: { type: string }
+            password: { type: string }
+  responses:
+    '204':
+      description: No Content
+    '400':
+      description: Bad Request
+    '410':
+      description: Gone

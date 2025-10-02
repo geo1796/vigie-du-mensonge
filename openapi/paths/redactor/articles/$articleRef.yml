@@ -1,0 +1,55 @@
+get:
+  summary: Récupérer les versions d’un article par référence (rédacteur)
+  description: Authentification requise.
+  tags: [ Redactor ]
+  operationId: findRedactorArticlesByReference
+  security:
+    - accessCookie: [ ]
+  parameters:
+    - articleRef:
+        name: articleRef
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id: { type: string, format: uuid }
+                reference: { type: string, format: uuid }
+                title: { type: string }
+                body: { type: string }
+                category: { $ref: "../../../openapi.yml#/components/schemas/ArticleCategory" }
+                status: { $ref: "../../../openapi.yml#/components/schemas/ArticleStatus" }
+                eventDate: { type: string, format: date-time }
+                updatedAt: { type: string, format: date-time }
+                minor: { type: integer }
+                major: { type: integer }
+                review:
+                  type: object
+                  properties:
+                    decision: { $ref: "../../../openapi.yml#/components/schemas/ArticleStatus" }
+                    notes: { type: string }
+                sources:
+                  type: array
+                  items: { type: string }
+                politicians:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id: { type: string, format: uuid }
+                      fullName: { type: string }
+                tags:
+                  type: array
+                  items: { type: string }
+    '400':
+      description: Bad Request (invalid article reference)
+    '404':
+      description: Not Found (article not found)
