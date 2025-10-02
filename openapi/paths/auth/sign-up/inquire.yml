@@ -1,10 +1,10 @@
 post:
-  summary: Demande de modification de mot de passe
-  description: Envoie un e-mail avec un lien de modification contenant un token éphémère (10 minutes).
-  tags: [ Password ]
-  operationId: passwordUpdateInquire
+  summary: Demande d'inscription
+  description: Envoie un email à l'adresse indiquée pour l'inscription.
+  tags: [ Auth ]
+  operationId: authInquireSignUp
   security:
-    - csrfCookie: [ ]
+    - csrfCookie: []
   requestBody:
     required: true
     content:

@@ -1,0 +1,14 @@
+get:
+  summary: fetch CSRF token
+  description: Définit un cookie CSRF.
+  tags: [ CSRF ]
+  operationId: getCsrfToken
+  responses:
+    '200':
+      description: OK
+      headers: { Set-Cookie: { $ref: "../openapi.yml#/components/headers/SetCsrfCookie" } }
+      content:
+        application/json:
+          schema:
+            type: object
+            properties: { csrfToken: { type: string } }

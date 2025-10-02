@@ -1,19 +1,17 @@
-refresh:
-  post:
-    summary: Rafraîchissement des tokens
-    description: Renouvelle l’accessToken en utilisant le refreshToken (cookie).
-    tags: [Auth]
-    operationId: authRefresh
-    security:
-      - refreshCookie: []
-    responses:
-      '200':
-        description: Rafraîchissement réussi
-        headers:
-          Set-Cookie:
-            $ref: "../../openapi.yml#/components/headers/SetAuthCookies"
-        content:
-          application/json:
-            schema: { $ref: "../../openapi.yml#/components/schemas/AuthResponse" }
-      '401':
-        $ref: "../../openapi.yml#/components/responses/Error401"
+post:
+  summary: Rafraîchissement
+  description: Renouvelle les cookies d'authentification (jwt && rft).
+  tags: [ Auth ]
+  operationId: authRefresh
+  security:
+    - refreshCookie: [ ]
+      csrfCookie: []
+  responses:
+    '200':
+      description: OK
+      headers:
+        Set-Cookie:
+          $ref: "../../openapi.yml#/components/headers/SetAuthCookies"
+      content:
+        application/json:
+          schema: { $ref: "../../openapi.yml#/components/schemas/AuthResponse" }
