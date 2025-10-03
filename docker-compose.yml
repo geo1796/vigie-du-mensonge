@@ -11,7 +11,7 @@ services:
     env_file:
       - .db.env
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U root -h db -p 5432 -d vdm_db" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -h db -p 5432 -d vdm_db" ]
       interval: 10s
       timeout: 5s
       retries: 5

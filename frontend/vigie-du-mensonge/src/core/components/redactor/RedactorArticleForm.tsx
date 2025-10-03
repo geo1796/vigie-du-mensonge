@@ -413,7 +413,7 @@ export function RedactorArticleForm({redactorClient, politicians, article, onSub
                         <div
                             className="fixed bottom-8 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-full p-2 shadow-lg">
                             <Button
-                                type="submit" variant="ghost"
+                                type="submit" variant="ghost" className="rounded-full"
                                 disabled={form.formState.isSubmitting}
                                 onClick={() => form.setValue("mode", "draft", {shouldValidate: false})}
                             >
@@ -421,7 +421,7 @@ export function RedactorArticleForm({redactorClient, politicians, article, onSub
                             </Button>
                             {article &&
                                 <Button
-                                    type="submit" variant="ghost"
+                                    type="submit" variant="ghost" className="rounded-full"
                                     disabled={form.formState.isSubmitting}
                                     onClick={() => form.setValue("mode", "publish", {shouldValidate: false})}
                                 >

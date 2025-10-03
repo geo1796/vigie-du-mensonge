@@ -10,3 +10,5 @@ const ArticleReference = "articleReference"
 const ArticleID = "articleID"
 
 const UserTag = "userTag"
+
+const RoleName = "roleName"

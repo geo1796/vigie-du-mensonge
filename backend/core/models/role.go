@@ -15,6 +15,14 @@ const (
 	RoleRedactor  RoleName = "REDACTOR"
 )
 
+func (r RoleName) IsValid() bool {
+	switch r {
+	case RoleAdmin, RoleModerator, RoleRedactor:
+		return true
+	}
+	return false
+}
+
 type Role struct {
 	ID        uuid.UUID      `gorm:"type:uuid;primaryKey;default:gen_random_uuid()"`
 	Name      RoleName       `gorm:"column:name;unique;not null"`

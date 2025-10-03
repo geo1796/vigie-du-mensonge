@@ -76,7 +76,7 @@ func (s *service) generateUserTag(username string) (string, error) {
 	generator := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	for {
-		tag := fmt.Sprintf("%s%d", username, generator.Intn(10_000))
+		tag := fmt.Sprintf("%s#%04d", username, generator.Intn(10000))
 
 		if exists, err := s.repo.userExistsByTag(tag); err != nil {
 			return "", fmt.Errorf("failed to check if user tag exists: %v", err)
