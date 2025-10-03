@@ -39,6 +39,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: frontend
+          context: frontend/vigie-du-mensonge
           push: true
           tags: geo1796/vdm-frontend:${{ env.VERSION }}
