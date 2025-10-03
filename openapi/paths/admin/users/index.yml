@@ -1,0 +1,25 @@
+get:
+  summary: Recherche parmis les utilisateurs à partir du tag
+  description: Retourne une liste de tags. Réservé aux utilisateurs ayant le rôle ADMIN
+  tags: [ Admin ]
+  operationId: searchUsers
+  security:
+    - accessCookie: [ ]
+  parameters:
+    - name: userTag
+      in: query
+      required: true
+      schema: { type: string }
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              results:
+                type: array
+                items: { type: string }
+    '400':
+      description: Bad Request

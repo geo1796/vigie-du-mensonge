@@ -7,11 +7,10 @@ post:
     - accessCookie: []
       csrfCookie: []
   parameters:
-    - articleID:
-        name: articleID
-        in: path
-        required: true
-        schema: { type: string, format: uuid }
+    - name: articleID
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
   requestBody:
     required: true
     content:

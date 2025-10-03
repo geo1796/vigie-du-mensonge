@@ -24,7 +24,7 @@ Vigie du mensonge is a website aiming to reference lies and falsehoods of the Fr
 - components (other than shadcn) placed in `/frontend/vigie-du-mensonge/src/core/components`
 - dependencies placed in `/frontend/vigie-du-mensonge/src/core/dependencies`
 - models placed in `/frontend/vigie-du-mensonge/src/core/models`
-- tailwind styles imported in `/frontend/vigie-du-mensonge/src/index.css`
+- tailwind styles imported in `/frontend/vigie-du-mensonge/src/index.css` - these should be the only styles used
 
 ## Backend
 
@@ -52,7 +52,8 @@ Each feature is placed in its own package under `/backend/api` and typically con
 - `service_test.go`: service unit tests
 - `dto.go`: Data Transfer Objects
 - `repository.go`: optional feature-specific database access layer
-- `integration_test.go`: (MANDATORY) one integration test for successful request/response cycle, using testcontainers for production like database and repositories
+- `integration_test.go`: (MANDATORY) one integration test for successful request/response cycle, using testcontainers
+  for production like database and repositories
 
 ## Database
 

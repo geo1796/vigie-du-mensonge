@@ -1,0 +1,53 @@
+post:
+  summary: Ajoute un rôle à l'utilisateur
+  tags: [ Admin ]
+  operationId: grantUserRoleForAdmin
+  security:
+    - accessCookie: [ ]
+      csrfCookie: [ ]
+  parameters:
+    - name: userTag
+      in: path
+      required: true
+      schema: { type: string }
+    - name: roleName
+      in: path
+      required: true
+      schema: { type: string }
+  responses:
+    '204':
+      description: No Content
+    '400':
+      description: Bad Request
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+
+delete:
+  summary: Enlève un rôle à l'utilisateur
+  tags: [ Admin ]
+  operationId: revokeUserRoleForAdmin
+  security:
+    - accessCookie: [ ]
+      csrfCookie: [ ]
+  parameters:
+    - name: userTag
+      in: path
+      required: true
+      schema: { type: string }
+    - name: roleName
+      in: path
+      required: true
+      schema: { type: string }
+  responses:
+    '204':
+      description: No Content
+    '400':
+      description: Bad Request
+    '403':
+      description: Forbidden
+    '409':
+      description: Conflict
+
+

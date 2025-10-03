@@ -7,8 +7,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// User represents the users table
-
 type User struct {
 	ID uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()"`
 
@@ -38,4 +36,13 @@ func (u User) RoleNames() []RoleName {
 		roles = append(roles, r.Name)
 	}
 	return roles
+}
+
+func (u User) HasRole(roleName RoleName) bool {
+	for _, r := range u.RoleNames() {
+		if r == roleName {
+			return true
+		}
+	}
+	return false
 }

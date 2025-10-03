@@ -5,6 +5,7 @@ import (
 	"time"
 	"vdm/api/middlewares/authorize_authed_user"
 	"vdm/api/middlewares/locals_authed_user"
+	"vdm/api/routes/admin"
 	"vdm/api/routes/articles"
 	"vdm/api/routes/auth"
 	"vdm/api/routes/get_csrf"
@@ -91,6 +92,7 @@ func Group(deps *dependencies.Dependencies) *fiberx.Group {
 
 		redactor.Group(deps),
 		moderator.Group(deps),
+		admin.Group(deps),
 	)
 
 	return group

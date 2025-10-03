@@ -1,0 +1,25 @@
+get:
+  summary: Récupérer le profil d'un utilisateur
+  description: Retourne le profil d'un utilisateur
+  tags: [ Admin ]
+  operationId: findUserByTagForAdmin
+  security:
+    - accessCookie: [ ]
+  parameters:
+    - name: userTag
+      in: path
+      required: true
+      schema: { type: string }
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              tag: { type: string }
+              createdAt: { type: string, format: date-time }
+              roles:
+                type: array
+                items: { $ref: "../../../openapi.yml#/components/schemas/UserRole" }

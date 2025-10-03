@@ -1,6 +1,6 @@
 get:
   summary: Listing des articles du rédacteur
-  description: Authentification requise.
+  description: Authentification requise. Rôle REDACTOR requis.
   tags: [ Redactor ]
   operationId: getRedactorArticles
   security:

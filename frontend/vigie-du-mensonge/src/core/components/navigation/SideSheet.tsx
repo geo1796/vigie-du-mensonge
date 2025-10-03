@@ -43,6 +43,16 @@ export function SideSheet() {
                     </>
                     :
                     <>
+                        {auth.isAdmin &&
+                            <SheetClose asChild>
+                                <Link
+                                    to="/admin/users"
+                                    className="p-2 text-sm font-medium rounded-md hover:bg-accent"
+                                >
+                                    Espace administrateur
+                                </Link>
+                            </SheetClose>
+                        }
                         {auth.isModerator &&
                             <SheetClose asChild>
                                 <Link
