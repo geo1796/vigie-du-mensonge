@@ -6,11 +6,10 @@ get:
   security:
     - accessCookie: [ ]
   parameters:
-    - articleRef:
-        name: articleRef
-        in: path
-        required: true
-        schema: { type: string, format: uuid }
+    - name: articleRef
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
   responses:
     '200':
       description: OK

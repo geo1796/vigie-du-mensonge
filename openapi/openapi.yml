@@ -54,6 +54,13 @@ paths:
   /moderator/articles/$articleID/review:
     $ref: "./paths/moderator/articles/$articleID.review.yml"
 
+  /admin/users:
+    $ref: "./paths/admin/users/index.yml"
+  /admin/users/$userTag:
+    $ref: "./paths/admin/users/$userTag.yml"
+  /admin/users/$userTag/roles/$roleName:
+    $ref: "./paths/admin/users/$userTag.roles.$roleName.yml"
+
 
 components:
   securitySchemes:

@@ -4,11 +4,10 @@ get:
   tags: [ Articles ]
   operationId: findArticle
   parameters:
-    - articleID:
-        name: articleID
-        in: path
-        required: true
-        schema: { type: string, format: uuid }
+    - name: articleID
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
   responses:
     '200':
       description: OK

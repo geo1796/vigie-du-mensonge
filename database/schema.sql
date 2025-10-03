@@ -86,6 +86,8 @@ CREATE TABLE users
     CONSTRAINT pk_users PRIMARY KEY (id),
 
     tag        TEXT        NOT NULL,
+    CONSTRAINT ck_users_tag CHECK (length(tag) > 5 AND length(tag) < 25),
+
     email      TEXT        NOT NULL,
     password   TEXT        NOT NULL,
 

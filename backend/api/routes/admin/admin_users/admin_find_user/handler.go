@@ -17,7 +17,7 @@ type handler struct {
 
 func (h *handler) findUserForAdmin(c *fiber.Ctx) error {
 	userTag := c.Params(local_keys.UserTag)
-	if userTag == "" {
+	if len(userTag) < 6 {
 		return &fiber.Error{Code: fiber.StatusBadRequest, Message: "invalid user tag"}
 	}
 

@@ -1,17 +1,16 @@
 post:
   summary: Revendiquer un article pour modération
-  description: Assigne l’article au modérateur connecté. Authentification requise.
+  description: Assigne l’article au modérateur connecté.
   tags: [ Moderator ]
   operationId: claimArticleForModerator
   security:
-    - accessCookie: []
-      csrfCookie: []
+    - accessCookie: [ ]
+      csrfCookie: [ ]
   parameters:
-    - articleID:
-        name: articleID
-        in: path
-        required: true
-        schema: { type: string, format: uuid }
+    - name: articleID
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
   responses:
     '204':
       description: No Content

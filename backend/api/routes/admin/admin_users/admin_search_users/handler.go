@@ -16,8 +16,8 @@ type handler struct {
 }
 
 func (h *handler) searchUsersForAdmin(c *fiber.Ctx) error {
-	query := c.Params(local_keys.UserTag)
-	if query == "" {
+	query := c.Query(local_keys.UserTag)
+	if len(query) < 2 {
 		return &fiber.Error{Code: fiber.StatusBadRequest, Message: fmt.Sprintf("query param <%s> is required", local_keys.UserTag)}
 	}
 
