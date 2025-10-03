@@ -1,8 +1,8 @@
 package inquire_sign_up
 
 import (
+	"vdm/core/dependencies/env"
 	"vdm/core/dependencies/mailer"
-	"vdm/core/env"
 	"vdm/core/fiberx"
 
 	"github.com/gofiber/fiber/v2"

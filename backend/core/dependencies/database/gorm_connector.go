@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"vdm/core/env"
+	"vdm/core/dependencies/env"
 	"vdm/core/models"
 
 	"gorm.io/driver/postgres"
@@ -10,17 +10,17 @@ import (
 	gormLogger "gorm.io/gorm/logger"
 )
 
-type Connector interface {
+type GormConnector interface {
 	Close() error
 	Migrate() error
 	GormDB() *gorm.DB
 }
 
-type PostgresConnector struct {
+type PgGormConnector struct {
 	DB *gorm.DB
 }
 
-func NewConnector(config env.DatabaseConfig) (Connector, error) {
+func NewGormConnector(config env.DatabaseConfig) (GormConnector, error) {
 	gormConfig := &gorm.Config{
 		Logger: gormLogger.Default.LogMode(gormLogger.Silent),
 	}
@@ -46,12 +46,12 @@ func NewConnector(config env.DatabaseConfig) (Connector, error) {
 		return nil, fmt.Errorf("failed to ping database: %v", err)
 	}
 
-	return &PostgresConnector{DB: gormDB}, nil
+	return &PgGormConnector{DB: gormDB}, nil
 }
 
-func (p *PostgresConnector) GormDB() *gorm.DB { return p.DB }
+func (p *PgGormConnector) GormDB() *gorm.DB { return p.DB }
 
-func (p *PostgresConnector) Migrate() error {
+func (p *PgGormConnector) Migrate() error {
 	return p.DB.AutoMigrate(
 		&models.Politician{}, &models.Occupation{}, &models.Government{},
 		&models.User{}, &models.Role{}, &models.UserRole{}, &models.UserToken{},
@@ -59,7 +59,7 @@ func (p *PostgresConnector) Migrate() error {
 	)
 }
 
-func (p *PostgresConnector) Close() error {
+func (p *PgGormConnector) Close() error {
 	sqlDB, err := p.DB.DB()
 	if err != nil {
 		return err

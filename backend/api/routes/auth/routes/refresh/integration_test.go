@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 	"vdm/core/dependencies/database"
-	"vdm/core/env"
+	"vdm/core/dependencies/env"
 	"vdm/core/fiberx"
 	"vdm/core/hmac_utils"
 	"vdm/core/models"
@@ -34,7 +34,7 @@ var secret = []byte("secret")
 var validUsrTok = &models.UserToken{UserID: testUser.ID, Hash: hmac_utils.HashUUID(validRft, secret), Category: models.UserTokenCategoryRefresh, Expiry: time.Now().Add(1 * time.Minute)}
 var expiredUsrTok = &models.UserToken{UserID: testUser.ID, Hash: hmac_utils.HashUUID(expiredRft, secret), Category: models.UserTokenCategoryRefresh, Expiry: time.Now().Add(-1 * time.Minute)}
 
-func loadTestData(c context.Context, t *testing.T) (container testcontainers.Container, connector database.Connector) {
+func loadTestData(c context.Context, t *testing.T) (container testcontainers.Container, connector database.GormConnector) {
 	container, connector = test_utils.NewTestContainerConnector(c, t)
 
 	db := connector.GormDB()
@@ -61,7 +61,7 @@ func loadTestData(c context.Context, t *testing.T) (container testcontainers.Con
 	return
 }
 
-func cleanupTestData(c context.Context, t *testing.T, container testcontainers.Container, connector database.Connector) {
+func cleanupTestData(c context.Context, t *testing.T, container testcontainers.Container, connector database.GormConnector) {
 	if err := connector.Close(); err != nil {
 		t.Logf("failed to close connector: %v", err)
 	}

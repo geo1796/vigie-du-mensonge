@@ -1,7 +1,7 @@
 package mailer
 
 import (
-	"vdm/core/env"
+	"vdm/core/dependencies/env"
 	"vdm/core/logger"
 
 	"gopkg.in/gomail.v2"

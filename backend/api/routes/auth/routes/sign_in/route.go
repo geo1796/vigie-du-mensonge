@@ -1,11 +1,11 @@
 package sign_in
 
 import (
-	"vdm/core/env"
+	"vdm/core/dependencies/database"
+	"vdm/core/dependencies/env"
 	"vdm/core/fiberx"
 
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 )
 
 const (
@@ -13,8 +13,8 @@ const (
 	Method = fiber.MethodPost
 )
 
-func Route(db *gorm.DB, cfg env.SecurityConfig) *fiberx.Route {
-	repo := &repository{db}
+func Route(pgxProvider database.PgxProvider, cfg env.SecurityConfig) *fiberx.Route {
+	repo := &pgxRepo{pool: pgxProvider.Pool(), queries: pgxProvider.Queries()}
 	svc := &service{
 		repo:               repo,
 		accessTokenSecret:  cfg.AccessTokenSecret,

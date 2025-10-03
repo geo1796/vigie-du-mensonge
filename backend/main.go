@@ -9,8 +9,8 @@ import (
 	"vdm/api"
 	"vdm/core/dependencies"
 	"vdm/core/dependencies/database"
+	"vdm/core/dependencies/env"
 	"vdm/core/dependencies/mailer"
-	"vdm/core/env"
 	"vdm/core/fiberx"
 	"vdm/core/logger"
 
@@ -30,19 +30,30 @@ func main() {
 		os.Exit(1)
 	}
 
-	dbConn, err := database.NewConnector(cfg.Database)
+	dbConn, err := database.NewGormConnector(cfg.Database)
 	if err != nil {
 		logger.Error("failed to init database", logger.Err(err))
 		os.Exit(1)
 	}
 
-	defer func(dbConn database.Connector) {
+	defer func(dbConn database.GormConnector) {
 		if err := dbConn.Close(); err != nil {
 			logger.Error("failed to close database connection", logger.Err(err))
 		}
 	}(dbConn)
 
-	deps := dependencies.New(cfg, dbConn, mailer.New(cfg.Mailer))
+	c := context.Background()
+	pgxProvider, err := database.NewPgxProvider(c, cfg.Database)
+	if err != nil {
+		logger.Error("failed to init pgx provider", logger.Err(err))
+		os.Exit(1)
+	}
+
+	defer func(pgxProvider database.PgxProvider) {
+		pgxProvider.Close()
+	}(pgxProvider)
+
+	deps := dependencies.New(cfg, dbConn, pgxProvider, mailer.New(cfg.Mailer))
 
 	app := fiberx.NewApp()
 	app.Use(recover.New())

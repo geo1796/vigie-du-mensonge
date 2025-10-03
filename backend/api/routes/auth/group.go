@@ -22,7 +22,7 @@ func Group(deps *dependencies.Dependencies) *fiberx.Group {
 		set_auth_cookies.Middleware(deps.Config.Security),
 
 		process_sign_up.Route(deps.GormDB(), deps.Config.Security),
-		sign_in.Route(deps.GormDB(), deps.Config.Security),
+		sign_in.Route(deps.PgxProvider, deps.Config.Security),
 		refresh.Route(deps.GormDB(), deps.Config.Security),
 		sign_out.Route(deps.GormDB(), deps.Config.Security),
 	)

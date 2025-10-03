@@ -1,0 +1,37 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    schema: "sql/schema.sql"
+    queries:
+      - "sql/users.sql"
+      - "sql/user_tokens.sql"
+      - "sql/roles.sql"
+    gen:
+      go:
+        package: "queries"
+        out: "queries"
+        sql_package: "pgx/v5"
+        emit_db_tags: true
+        emit_json_tags: true
+        emit_pointers_for_null_types: true
+        overrides:
+          - db_type: "uuid"
+            nullable: true
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
+          - db_type: "uuid"
+            nullable: false
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
+          - db_type: "timestamptz"
+            nullable: true
+            go_type:
+              import: "time"
+              type: "Time"
+          - db_type: "timestamptz"
+            nullable: false
+            go_type:
+              import: "time"
+              type: "Time"

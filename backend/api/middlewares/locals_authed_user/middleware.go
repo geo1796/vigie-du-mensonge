@@ -1,7 +1,7 @@
 package locals_authed_user
 
 import (
-	"vdm/core/env"
+	"vdm/core/dependencies/env"
 	"vdm/core/fiberx"
 )
 

@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 	"vdm/core/dependencies/database"
-	"vdm/core/env"
+	"vdm/core/dependencies/env"
 	"vdm/core/fiberx"
 	"vdm/core/jwt_utils"
 	"vdm/core/locals"
@@ -23,7 +23,7 @@ import (
 
 var testUser = &models.User{ID: uuid.New(), Email: "signout_user0@email.com"}
 
-func loadTestData(c context.Context, t *testing.T) (container testcontainers.Container, connector database.Connector) {
+func loadTestData(c context.Context, t *testing.T) (container testcontainers.Container, connector database.GormConnector) {
 	container, connector = test_utils.NewTestContainerConnector(c, t)
 
 	db := connector.GormDB()
@@ -50,7 +50,7 @@ func loadTestData(c context.Context, t *testing.T) (container testcontainers.Con
 	return
 }
 
-func cleanupTestData(c context.Context, t *testing.T, container testcontainers.Container, connector database.Connector) {
+func cleanupTestData(c context.Context, t *testing.T, container testcontainers.Container, connector database.GormConnector) {
 	if err := connector.Close(); err != nil {
 		t.Logf("failed to close connector: %v", err)
 	}

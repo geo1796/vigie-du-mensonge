@@ -8,7 +8,7 @@ import (
 	"time"
 	"vdm/api/middlewares/locals_authed_user"
 	"vdm/core/dependencies/database"
-	"vdm/core/env"
+	"vdm/core/dependencies/env"
 	"vdm/core/fiberx"
 	"vdm/core/jwt_utils"
 	"vdm/core/locals"
@@ -27,7 +27,7 @@ type testData struct {
 	cfg   env.SecurityConfig
 }
 
-func loadTestData(c context.Context, t *testing.T) (container testcontainers.Container, connector database.Connector, data testData) {
+func loadTestData(c context.Context, t *testing.T) (container testcontainers.Container, connector database.GormConnector, data testData) {
 	container, connector = test_utils.NewTestContainerConnector(c, t)
 
 	var err error

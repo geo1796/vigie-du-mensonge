@@ -14,7 +14,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func CleanUpTestData(c context.Context, t *testing.T, container testcontainers.Container, connector database.Connector) {
+func CleanUpTestData(c context.Context, t *testing.T, container testcontainers.Container, connector database.GormConnector) {
 	if err := connector.Close(); err != nil {
 		t.Logf("failed to close connector: %v", err)
 	}
@@ -23,7 +23,7 @@ func CleanUpTestData(c context.Context, t *testing.T, container testcontainers.C
 	}
 }
 
-func NewTestContainerConnector(c context.Context, t *testing.T) (testcontainers.Container, database.Connector) {
+func NewTestContainerConnector(c context.Context, t *testing.T) (testcontainers.Container, database.GormConnector) {
 	container, ip, port := startPostgresContainer(c, t)
 
 	connector, err := newPostgresTestContainerConnector(ip, port.Port(), "disable")
@@ -87,7 +87,7 @@ func startPostgresContainer(c context.Context, t *testing.T) (testcontainers.Con
 	return postgresC, ip, port
 }
 
-func newPostgresTestContainerConnector(host, port, sslMode string) (database.Connector, error) {
+func newPostgresTestContainerConnector(host, port, sslMode string) (database.GormConnector, error) {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
 		host, "postgres", "postgres", "test_db", port, sslMode)
 
@@ -110,5 +110,5 @@ func newPostgresTestContainerConnector(host, port, sslMode string) (database.Con
 		return nil, fmt.Errorf("failed to connect to postgres: %w", err)
 	}
 
-	return &database.PostgresConnector{DB: db}, nil
+	return &database.PgGormConnector{DB: db}, nil
 }

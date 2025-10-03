@@ -1,7 +1,7 @@
 package set_auth_cookies
 
 import (
-	"vdm/core/env"
+	"vdm/core/dependencies/env"
 	"vdm/core/fiberx"
 )
 

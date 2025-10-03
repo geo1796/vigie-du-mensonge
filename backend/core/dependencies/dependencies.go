@@ -2,26 +2,28 @@ package dependencies
 
 import (
 	"vdm/core/dependencies/database"
+	"vdm/core/dependencies/env"
 	"vdm/core/dependencies/mailer"
-	"vdm/core/env"
 
 	"gorm.io/gorm"
 )
 
 type Dependencies struct {
-	Config      env.Config
-	dbConnector database.Connector
-	Mailer      mailer.Mailer
+	Config        env.Config
+	gormConnector database.GormConnector
+	PgxProvider   database.PgxProvider
+	Mailer        mailer.Mailer
 }
 
 func (d *Dependencies) GormDB() *gorm.DB {
-	return d.dbConnector.GormDB()
+	return d.gormConnector.GormDB()
 }
 
-func New(cfg env.Config, dbConnector database.Connector, mailer mailer.Mailer) *Dependencies {
+func New(cfg env.Config, dbConnector database.GormConnector, pgxProvider database.PgxProvider, mailer mailer.Mailer) *Dependencies {
 	return &Dependencies{
-		Config:      cfg,
-		dbConnector: dbConnector,
-		Mailer:      mailer,
+		Config:        cfg,
+		gormConnector: dbConnector,
+		PgxProvider:   pgxProvider,
+		Mailer:        mailer,
 	}
 }

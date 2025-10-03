@@ -1,7 +1,7 @@
 package refresh
 
 import (
-	"vdm/core/env"
+	"vdm/core/dependencies/env"
 	"vdm/core/fiberx"
 
 	"github.com/gofiber/fiber/v2"

@@ -26,7 +26,7 @@ type testData struct {
 	articles    []*models.Article
 }
 
-func loadTestData(c context.Context, t *testing.T) (container testcontainers.Container, connector database.Connector, data testData) {
+func loadTestData(c context.Context, t *testing.T) (container testcontainers.Container, connector database.GormConnector, data testData) {
 	container, connector = test_utils.NewTestContainerConnector(c, t)
 
 	var err error

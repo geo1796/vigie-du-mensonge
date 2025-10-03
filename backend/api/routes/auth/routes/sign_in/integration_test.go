@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 	"vdm/core/dependencies/database"
-	"vdm/core/env"
+	"vdm/core/dependencies/env"
 	"vdm/core/fiberx"
 	"vdm/core/models"
 	"vdm/test_utils"
@@ -27,16 +27,15 @@ var testRoles = []*models.Role{
 }
 var testUser = &models.User{Email: "signin_user0@email.com", Tag: "user0123", Roles: testRoles}
 
-func loadTestData(c context.Context, t *testing.T) (container testcontainers.Container, connector database.Connector) {
-	container, connector = test_utils.NewTestContainerConnector(c, t)
+func loadPgxData(c context.Context, t *testing.T) (container testcontainers.Container, pgxProvider database.PgxProvider) {
+	container, pgxProvider = test_utils.NewTestContainerPgxProvider(c, t)
 
-	db := connector.GormDB()
-
+	pool := pgxProvider.Pool()
 	var err error
 
 	defer func() {
 		if err != nil {
-			cleanupTestData(c, t, container, connector)
+			test_utils.CleanUpPgxProvider(c, t, container, pgxProvider)
 			t.Fatal(err)
 		}
 	}()
@@ -45,35 +44,53 @@ func loadTestData(c context.Context, t *testing.T) (container testcontainers.Con
 	pwd, _ := bcrypt.GenerateFromPassword([]byte("Test123!"), bcrypt.DefaultCost)
 	testUser.Password = string(pwd)
 
-	if err = db.Create(&testRoles).Error; err != nil {
-		t.Fatal(err)
+	// Insert roles and fetch their IDs (upsert-safe)
+	roleIDs := make([]string, len(testRoles))
+	for i, r := range testRoles {
+		row := pool.QueryRow(c, `INSERT INTO roles (name) VALUES ($1)
+			ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
+			RETURNING id`, r.Name)
+		if scanErr := row.Scan(&roleIDs[i]); scanErr != nil {
+			err = scanErr
+			return
+		}
 	}
 
-	err = db.Create(testUser).Error
+	// Insert user and get ID (upsert by email/tag for safety)
+	var userID string
+	row := pool.QueryRow(c, `INSERT INTO users (tag, email, password)
+		VALUES ($1, $2, $3)
+		ON CONFLICT (email) DO UPDATE SET tag = EXCLUDED.tag, password = EXCLUDED.password
+		RETURNING id`, testUser.Tag, testUser.Email, testUser.Password)
+	if scanErr := row.Scan(&userID); scanErr != nil {
+		err = scanErr
+		return
+	}
+
+	// Map user to roles
+	for _, roleID := range roleIDs {
+		_, execErr := pool.Exec(c, `INSERT INTO user_roles (user_id, role_id)
+			VALUES ($1, $2)
+			ON CONFLICT (user_id, role_id) DO NOTHING`, userID, roleID)
+		if execErr != nil {
+			err = execErr
+			return
+		}
+	}
 
 	return
 }
 
-func cleanupTestData(c context.Context, t *testing.T, container testcontainers.Container, connector database.Connector) {
-	if err := connector.Close(); err != nil {
-		t.Logf("failed to close connector: %v", err)
-	}
-
-	if err := container.Terminate(c); err != nil {
-		t.Logf("failed to terminate container: %v", err)
-	}
-}
-
 func TestIntegration_Success(t *testing.T) {
 	c := context.Background()
-	container, connector := loadTestData(c, t)
-	t.Cleanup(func() { cleanupTestData(c, t, container, connector) })
+	container, pgxProvider := loadPgxData(c, t)
+	t.Cleanup(func() { test_utils.CleanUpPgxProvider(c, t, container, pgxProvider) })
 
 	app := fiberx.NewApp()
 
 	dummyCfg := env.SecurityConfig{AccessTokenSecret: []byte("dummySecret"), AccessTokenTTL: 1 * time.Minute, RefreshTokenTTL: 1 * time.Minute}
 
-	Route(connector.GormDB(), dummyCfg).Register(app)
+	Route(pgxProvider, dummyCfg).Register(app)
 
 	reqDTO := RequestDTO{
 		Email:    testUser.Email,
@@ -103,25 +120,26 @@ func TestIntegration_Success(t *testing.T) {
 	}
 	assert.Equal(t, testUser.RoleNames(), dto.Roles)
 
-	var tokenCount int64
-	if err = connector.GormDB().Model(&models.UserToken{}).
-		Where("user_id = ? AND category = ?", testUser.ID, models.UserTokenCategoryRefresh).
-		Count(&tokenCount).Error; err != nil {
+	var count int64
+	if err = pgxProvider.Pool().
+		QueryRow(c, "SELECT COUNT(*) FROM user_tokens").
+		Scan(&count); err != nil {
 		t.Fatal(err)
 	}
-	assert.Equal(t, int64(1), tokenCount)
+
+	assert.Equal(t, int64(1), count)
 }
 
 func TestIntegration_WrongPassword(t *testing.T) {
 	c := context.Background()
-	container, connector := loadTestData(c, t)
-	t.Cleanup(func() { cleanupTestData(c, t, container, connector) })
+	container, pgxProvider := loadPgxData(c, t)
+	t.Cleanup(func() { test_utils.CleanUpPgxProvider(c, t, container, pgxProvider) })
 
 	app := fiberx.NewApp()
 
 	dummyCfg := env.SecurityConfig{AccessTokenSecret: []byte("dummySecret"), AccessTokenTTL: 1 * time.Minute, RefreshTokenTTL: 1 * time.Minute}
 
-	Route(connector.GormDB(), dummyCfg).Register(app)
+	Route(pgxProvider, dummyCfg).Register(app)
 
 	reqDTO := RequestDTO{
 		Email:    testUser.Email,
@@ -143,14 +161,14 @@ func TestIntegration_WrongPassword(t *testing.T) {
 
 func TestIntegration_EmailNotFound(t *testing.T) {
 	c := context.Background()
-	container, connector := loadTestData(c, t)
-	t.Cleanup(func() { cleanupTestData(c, t, container, connector) })
+	container, pgxProvider := loadPgxData(c, t)
+	t.Cleanup(func() { test_utils.CleanUpPgxProvider(c, t, container, pgxProvider) })
 
 	app := fiberx.NewApp()
 
 	dummyCfg := env.SecurityConfig{AccessTokenSecret: []byte("dummySecret"), AccessTokenTTL: 1 * time.Minute, RefreshTokenTTL: 1 * time.Minute}
 
-	Route(connector.GormDB(), dummyCfg).Register(app)
+	Route(pgxProvider, dummyCfg).Register(app)
 
 	reqDTO := RequestDTO{
 		Email:    "unknown_" + strconv.FormatInt(time.Now().UnixNano(), 10) + "@email.com",

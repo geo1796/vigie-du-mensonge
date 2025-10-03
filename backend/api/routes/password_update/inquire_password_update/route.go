@@ -1,8 +1,8 @@
 package inquire_password_update
 
 import (
+	"vdm/core/dependencies/env"
 	"vdm/core/dependencies/mailer"
-	"vdm/core/env"
 	"vdm/core/fiberx"
 
 	"github.com/gofiber/fiber/v2"

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 	"vdm/core/dependencies/database"
-	"vdm/core/env"
+	"vdm/core/dependencies/env"
 	"vdm/core/fiberx"
 	"vdm/core/hmac_utils"
 	"vdm/core/models"
@@ -28,13 +28,13 @@ type testData struct {
 	expiredToken uuid.UUID
 }
 
-func loadTestData(c context.Context, t *testing.T) (container testcontainers.Container, connector database.Connector, data testData) {
+func loadTestData(c context.Context, t *testing.T) (container testcontainers.Container, connector database.GormConnector, data testData) {
 	container, connector = test_utils.NewTestContainerConnector(c, t)
 	db := connector.GormDB()
 
 	var err error
 
-	defer func(c context.Context, container testcontainers.Container, connector database.Connector) {
+	defer func(c context.Context, container testcontainers.Container, connector database.GormConnector) {
 		if err != nil {
 			cleanUpTestData(c, t, container, connector)
 			t.Fatal(err)
@@ -67,7 +67,7 @@ func loadTestData(c context.Context, t *testing.T) (container testcontainers.Con
 	return
 }
 
-func cleanUpTestData(c context.Context, t *testing.T, container testcontainers.Container, connector database.Connector) {
+func cleanUpTestData(c context.Context, t *testing.T, container testcontainers.Container, connector database.GormConnector) {
 	if err := connector.Close(); err != nil {
 		t.Logf("failed to close connector: %v", err)
 	}
