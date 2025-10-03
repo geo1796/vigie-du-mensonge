@@ -23,7 +23,7 @@ func (r *repository) findUserByEmail(email string) (models.User, error) {
 		Preload("Roles", func(db *gorm.DB) *gorm.DB {
 			return db.Select("id", "name")
 		}).
-		Select("id", "password", "tag", "created_at", "updated_at").
+		Select("id", "password", "tag").
 		First(&user).Error; err != nil {
 		return models.User{}, err
 	}

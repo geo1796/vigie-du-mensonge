@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type User struct {
@@ -16,9 +15,8 @@ type User struct {
 	Email    string `gorm:"column:email;unique;not null"`
 	Password string `gorm:"column:password;not null"`
 
-	CreatedAt time.Time      `gorm:"column:created_at;not null;default:now()"`
-	UpdatedAt time.Time      `gorm:"column:updated_at;not null;default:now()"`
-	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at"`
+	CreatedAt time.Time `gorm:"column:created_at;not null;default:now()"`
+	UpdatedAt time.Time `gorm:"column:updated_at;not null;default:now()"`
 }
 
 func (User) TableName() string { return "users" }
