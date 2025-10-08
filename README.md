@@ -1,17 +1,5 @@
 # Vigie du mensonge
 
-https://vigiedumensonge.gocorp.fr/
-
-## IMPORTANT
-
-Ce repo est à l'origine une initiative personnelle de ma part en tant que membre du discord de la
-communauté de **Clemovitch** et n'a rien d'**officiel**.
-
-Il s'agit simplement d'une proposition alternative qui vise à mettre en place une plateforme permettant
-de référencer les mensonges, les contre-vérités, les manipulations, et la désinformation des gouvernements
-français en attendant qu'une version officielle soit mise en place. Le cas échéant, je ne vois aucun obstacle
-majeur au portage des articles qui auront été rédigés sur ce projet vers le projet officiel.
-
 ## Vue d'ensemble
 
 Ce README est destiné au grand public et ne contient donc aucun détail technique
@@ -99,8 +87,3 @@ redactor@vdm.com Test123! (utilisateur avec le rôle REDACTOR uniquement)
 ### Openapi
 
 L'application expose un openapi sur http://localhost:8080/docs pour la documentation de l'API.
-
-## Pour conclure
-
-Toutes les suggestions sont les bienvenues, et l’ensemble du projet reste entièrement revisitable en fonction des retours de la communauté.
-Vous pouvez ouvrir une GitHub issue pour signaler un bug ou suggérer une amélioration / modification / nouvelle feature.
